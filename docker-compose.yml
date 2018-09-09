@@ -1,0 +1,55 @@
+version: "3"
+
+#volumes:
+#  consul:
+#  mysql:
+#  redis:
+#  es:
+#  phpmyadmin:
+
+services:
+  #######################################
+  # Main Services
+  #######################################
+  app:
+    build: .
+    ports:
+    - 10080:80
+    - 10443:443
+    volumes:
+    - .:/app
+#    - ./docker/log/:/var/log/pdffiller
+
+#  mysql:
+#    image: mysql:5.7.17
+#    env_file:
+#    - docker-compose.env
+#    expose:
+#    - 3306
+#    ports:
+#    - 13306:3306
+#    volumes:
+#    - mysql:/var/lib/mysql
+
+
+  #######################################
+  # Additional Services
+  #######################################
+#  redis:
+#    image: redis
+#    ports:
+#    - 16379:6379
+#    volumes:
+#    - redis:/data
+
+
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    env_file:
+#    - docker-compose.env
+#    depends_on:
+#    - mysql
+#    ports:
+#    - 8001:80
+#    volumes:
+#    - phpmyadmin:/sessions
