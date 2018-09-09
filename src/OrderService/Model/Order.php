@@ -49,4 +49,59 @@ final class Order extends AggregateRoot
         $this->id = $createdOrder->orderId();
         $this->ownerId = $createdOrder->ownerId();
     }
+
+    public function update()
+    {
+
+    }
+
+    public function changeStatus()
+    {
+
+    }
+
+    public function reserve()
+    {
+
+    }
+
+    public function releaseReservation()
+    {
+
+    }
+
+    public function createOffer()
+    {
+
+    }
+
+    public function retractOffer()
+    {
+
+    }
+
+    public function declineOffer()
+    {
+
+    }
+
+    public function acceptOffer()
+    {
+
+    }
+
+    public function createContract()
+    {
+
+    }
+
+    public function createOfferGroup()
+    {
+
+    }
+
+    public function addOfferToGroup()
+    {
+
+    }
 }
