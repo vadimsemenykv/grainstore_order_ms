@@ -16,6 +16,11 @@ class OrderController extends Controller
 {
     public function create(): JsonResponse
     {
-        return $this->json(['id' => new Order()], 200);
+        return $this->json(['id' => 1], 200);
+    }
+
+    public function d()
+    {
+        
     }
 }
