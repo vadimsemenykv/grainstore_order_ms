@@ -6,8 +6,8 @@
  * Time: 8:30 PM
  */
 
-namespace Service\Order\Model;
+namespace Contract\Service\Order\Model;
 
-use Service\Order\Base\ObjectId;
+use Contract\Service\Base\ObjectId;
 
 class OrderId extends ObjectId{}

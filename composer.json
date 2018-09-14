@@ -24,7 +24,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "Service\\Order\\": "src/OrderService/"
+            "Contract\\Service\\": "src/Service/"
         }
     },
     "autoload-dev": {

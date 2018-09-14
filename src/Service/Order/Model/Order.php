@@ -6,11 +6,11 @@
  * Time: 7:38 PM
  */
 
-namespace Service\Order\Model;
+namespace Contract\Service\Order\Model;
 
-use Service\Order\Base\AggregateRoot;
-use Service\Order\Base\ApplyEventTrait;
-use Service\Order\Model\Event\CreatedOrder;
+use Contract\Service\Base\AggregateRoot;
+use Contract\Service\Base\ApplyEventTrait;
+use Contract\Service\Order\Model\Event\CreatedOrder;
 
 final class Order extends AggregateRoot
 {

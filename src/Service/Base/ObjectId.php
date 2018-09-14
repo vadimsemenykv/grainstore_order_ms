@@ -6,7 +6,7 @@
  * Time: 9:00 PM
  */
 
-namespace Service\Order\Base;
+namespace Contract\Service\Base;
 
 use Assert\Assertion;
 use Service\Order\Contract\ValueObject;
