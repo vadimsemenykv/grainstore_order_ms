@@ -1,6 +1,63 @@
 {
+    "alcaeus/mongo-php-adapter": {
+        "version": "1.1.5"
+    },
     "beberlei/assert": {
         "version": "v3.0.0"
+    },
+    "doctrine/annotations": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "cb4152ebcadbe620ea2261da1a1c5a9b8cea7672"
+        }
+    },
+    "doctrine/cache": {
+        "version": "v1.8.0"
+    },
+    "doctrine/collections": {
+        "version": "v1.5.0"
+    },
+    "doctrine/common": {
+        "version": "v2.9.0"
+    },
+    "doctrine/event-manager": {
+        "version": "v1.0.0"
+    },
+    "doctrine/inflector": {
+        "version": "v1.3.0"
+    },
+    "doctrine/instantiator": {
+        "version": "1.1.0"
+    },
+    "doctrine/lexer": {
+        "version": "v1.0.1"
+    },
+    "doctrine/mongodb": {
+        "version": "1.6.3"
+    },
+    "doctrine/mongodb-odm": {
+        "version": "1.2.5"
+    },
+    "doctrine/mongodb-odm-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "e1ee362a520ff9e3e7c38fb5399499427ed91314"
+        }
+    },
+    "doctrine/persistence": {
+        "version": "v1.0.1"
+    },
+    "doctrine/reflection": {
+        "version": "v1.0.0"
+    },
+    "mongodb/mongodb": {
+        "version": "1.4.2"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -38,6 +95,9 @@
     "symfony/dependency-injection": {
         "version": "v4.1.4"
     },
+    "symfony/doctrine-bridge": {
+        "version": "v4.1.4"
+    },
     "symfony/dotenv": {
         "version": "v4.1.4"
     },
@@ -72,6 +132,9 @@
         "version": "v4.1.4"
     },
     "symfony/http-kernel": {
+        "version": "v4.1.4"
+    },
+    "symfony/options-resolver": {
         "version": "v4.1.4"
     },
     "symfony/polyfill-mbstring": {

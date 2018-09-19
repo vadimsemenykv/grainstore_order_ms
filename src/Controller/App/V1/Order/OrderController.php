@@ -8,14 +8,15 @@
 
 namespace App\Controller\App\V1\Order;
 
-use Service\Order\Model\Order;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class OrderController extends Controller
 {
-    public function create(): JsonResponse
+    public function create(DocumentManager $documentManager): JsonResponse
     {
+        $documentManager
         return $this->json(['id' => 1], 200);
     }
 

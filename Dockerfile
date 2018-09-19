@@ -8,6 +8,9 @@ ENV WEB_DOCUMENT_ROOT="/app/public"
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb
+
 COPY docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 # Install PHP dependencies
