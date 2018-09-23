@@ -10,9 +10,9 @@ doctrine_mongodb:
         default:
             auto_mapping: true
             mappings:
-                App:
+                Order:
                     is_bundle: false
                     type: annotation
-                    dir: '%kernel.project_dir%/src/Document'
-                    prefix: App\Document\
-                    alias: App
+                    dir: '%kernel.project_dir%/src/Service/Order/Model'
+                    prefix: Contract\Service\Order\Model\
+                    alias: Order

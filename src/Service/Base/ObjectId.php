@@ -9,8 +9,8 @@
 namespace Contract\Service\Base;
 
 use Assert\Assertion;
-use Service\Order\Contract\ValueObject;
-use Service\Order\Exception\InvalidId;
+use Contract\Service\Contract\ValueObject;
+use Contract\Service\Exception\InvalidId;
 
 class ObjectId implements ValueObject
 {

@@ -11,13 +11,26 @@ namespace Contract\Service\Order\Model;
 use Contract\Service\Base\AggregateRoot;
 use Contract\Service\Base\ApplyEventTrait;
 use Contract\Service\Order\Model\Event\CreatedOrder;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Document;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
 
+/**
+ * Class Order
+ * @package Contract\Service\Order\Model
+ *
+ * @Document(collection="orders")
+ */
 final class Order extends AggregateRoot
 {
     use ApplyEventTrait;
 
-    /** @var OrderId */
+    /**
+     * @Id(strategy="CUSTOM", type="string", options={"class"="App\Infrastructure\DB\AlphaNumericGenerator"}))
+     */
     private $id;
+
+//    /** @var OrderId */
+//    private $id;
     /** @var OwnerId */
     private $ownerId;
 
@@ -26,12 +39,6 @@ final class Order extends AggregateRoot
     /** @var \DateTime */
     private $updated;
 
-    private function __construct(OrderId $id, OwnerId $ownerId)
-    {
-        $this->id = $id;
-        $this->ownerId = $ownerId;
-    }
-
     /**
      * @param OrderId $id
      * @param OwnerId $ownerId
@@ -39,7 +46,7 @@ final class Order extends AggregateRoot
      */
     public static function create(OrderId $id, OwnerId $ownerId): Order
     {
-        $self = new self($id, $ownerId);
+        $self = new self();
         $self->recordThat(CreatedOrder::create($id, $ownerId));
         return $self;
     }
