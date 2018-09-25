@@ -1,8 +1,4 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
-
-order:create:
-    path: /app/v1/order/create
-    controller: App\Controller\App\V1\Order\OrderController::create
+customer::order:create:
+    path: /api/contract/v1/order/create
+    controller: App\Controller\Contract\Customer\V1\Order\OrderController::create
 

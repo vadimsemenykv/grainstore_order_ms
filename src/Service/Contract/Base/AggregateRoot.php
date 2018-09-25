@@ -6,7 +6,7 @@
  * Time: 9:09 PM
  */
 
-namespace Contract\Service\Base;
+namespace Service\Contract\Base;
 
 use App\Infrastructure\Messaging\Message\DomainEvent;
 

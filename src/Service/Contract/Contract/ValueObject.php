@@ -6,7 +6,7 @@
  * Time: 8:33 PM
  */
 
-namespace Contract\Service\Contract;
+namespace Service\Contract\Contract;
 
 interface ValueObject
 {

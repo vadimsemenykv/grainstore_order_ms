@@ -6,8 +6,8 @@
  * Time: 8:30 PM
  */
 
-namespace Contract\Service\Order\Model;
+namespace Service\Contract\Order\Model\Id;
 
-use Contract\Service\Base\ObjectId;
+use Service\Contract\Base\ObjectId;
 
-class OwnerId extends ObjectId{}
+class OrderId extends ObjectId{}

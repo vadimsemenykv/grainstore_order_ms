@@ -6,7 +6,7 @@
  * Time: 8:52 PM
  */
 
-namespace Contract\Service\Exception;
+namespace Service\Contract\Exception;
 
 class InvalidId extends \InvalidArgumentException
 {

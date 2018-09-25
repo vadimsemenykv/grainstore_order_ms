@@ -6,11 +6,11 @@
  * Time: 9:00 PM
  */
 
-namespace Contract\Service\Base;
+namespace Service\Contract\Base;
 
 use Assert\Assertion;
-use Contract\Service\Contract\ValueObject;
-use Contract\Service\Exception\InvalidId;
+use Service\Contract\Contract\ValueObject;
+use Service\Contract\Exception\InvalidId;
 
 class ObjectId implements ValueObject
 {

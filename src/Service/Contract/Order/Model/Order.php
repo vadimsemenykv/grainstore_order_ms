@@ -6,17 +6,19 @@
  * Time: 7:38 PM
  */
 
-namespace Contract\Service\Order\Model;
+namespace Service\Contract\Order\Model;
 
-use Contract\Service\Base\AggregateRoot;
-use Contract\Service\Base\ApplyEventTrait;
-use Contract\Service\Order\Model\Event\CreatedOrder;
+use Service\Contract\Base\AggregateRoot;
+use Service\Contract\Base\ApplyEventTrait;
+use Service\Contract\Order\Model\Event\CreatedOrder;
+use Service\Contract\Order\Model\Id\OrderId;
+use Service\Contract\Order\Model\Id\OwnerId;
 use Doctrine\ODM\MongoDB\Mapping\Annotations\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
 
 /**
  * Class Order
- * @package Contract\Service\Order\Model
+ * @package Service\Contract\Order\Model
  *
  * @Document(collection="orders")
  */
@@ -25,7 +27,7 @@ final class Order extends AggregateRoot
     use ApplyEventTrait;
 
     /**
-     * @Id(strategy="CUSTOM", type="string", options={"class"="App\Infrastructure\DB\AlphaNumericGenerator"}))
+     * @Id
      */
     private $id;
 

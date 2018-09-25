@@ -6,14 +6,14 @@
  * Time: 9:36 PM
  */
 
-namespace Contract\Service\Order\Model\Event;
+namespace Service\Contract\Order\Model\Event;
 
 use App\Infrastructure\Exception\CriticalError;
 use App\Infrastructure\Messaging\Message\DomainEvent;
 use Assert\AssertionFailedException;
-use Contract\Service\Order\Model\Order;
-use Contract\Service\Order\Model\OrderId;
-use Contract\Service\Order\Model\OwnerId;
+use Service\Contract\Order\Model\Order;
+use Service\Contract\Order\Model\OrderId;
+use Service\Contract\Order\Model\OwnerId;
 
 class CreatedOrder extends DomainEvent
 {
