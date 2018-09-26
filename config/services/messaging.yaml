@@ -1,0 +1,10 @@
+services:
+
+#    message_factory:
+#        class: AirSlate\Payment\Infrastructure\Messaging\Message\FQCNFactory
+
+    payment_system_command_bus:
+        class: Service\Infrastructure\Messaging\Bus\MessageBus
+
+    payment_system_event_bus:
+        class: Service\Infrastructure\Messaging\Bus\MessageBus

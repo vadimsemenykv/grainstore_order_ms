@@ -8,8 +8,8 @@
 
 namespace App\Infrastructure\Middleware;
 
+use App\Infrastructure\Exception\Http\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class RequestJsonDecoder
 {

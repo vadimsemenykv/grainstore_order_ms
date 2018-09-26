@@ -9,7 +9,7 @@
 namespace Service\Contract\Base;
 
 use Assert\Assertion;
-use Service\Contract\Contract\ValueObject;
+use Service\Contract\Contracts\ValueObject;
 use Service\Contract\Exception\InvalidId;
 
 class ObjectId implements ValueObject
@@ -29,7 +29,7 @@ class ObjectId implements ValueObject
     public function sameValueAs(ValueObject $object): bool
     {
         /** @var ObjectId $object */
-        return get_class($this) === get_class($object) && $this->id === $object->id;
+        return \get_class($this) === \get_class($object) && $this->id === $object->id;
     }
 
     private function __construct($id)

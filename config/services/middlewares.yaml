@@ -1,0 +1,18 @@
+services:
+    # Decoder to accept requests with Content-Type="application/json"
+    App\Infrastructure\Middleware\RequestJsonDecoder:
+        tags:
+        - { name: kernel.event_listener, event: kernel.request }
+
+    # CORS Preflight request handler
+    App\Infrastructure\Middleware\CorsHandler:
+        tags:
+        - { name: kernel.event_listener, event: kernel.request }
+        - { name: kernel.event_listener, event: kernel.response }
+
+    # Centralized exceptions handling
+    App\Infrastructure\Middleware\ExceptionHandler:
+#        arguments: ['@monolog.logger', '%kernel.debug%']
+        arguments: ['%kernel.debug%']
+        tags:
+        - { name: kernel.event_listener, event: kernel.exception }

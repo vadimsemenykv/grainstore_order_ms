@@ -8,6 +8,7 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
+use Service\Infrastructure\Messaging\Bridge\BusBridge as CommandBusPassCompiler;
 
 class Kernel extends BaseKernel
 {
@@ -43,11 +44,11 @@ class Kernel extends BaseKernel
         $container->setParameter('container.autowiring.strict_mode', true);
         $container->setParameter('container.dumper.inline_class_loader', true);
         $confDir = $this->getProjectDir().'/config';
-
         $loader->load($confDir.'/{packages}/*'.self::CONFIG_EXTS, 'glob');
         $loader->load($confDir.'/{packages}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir.'/{services}'.self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir.'/services'.self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir.'/services_'.$this->environment.self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir.'/{services}/*'.self::CONFIG_EXTS, 'glob');
     }
 
     protected function configureRoutes(RouteCollectionBuilder $routes)
@@ -57,5 +58,14 @@ class Kernel extends BaseKernel
         $routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS, '/', 'glob');
         $routes->import($confDir.'/{routes}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, '/', 'glob');
         $routes->import($confDir.'/{routes}'.self::CONFIG_EXTS, '/', 'glob');
+    }
+
+    /**
+     * You can modify the container here before it is dumped to PHP code.
+     * @param ContainerBuilder $container
+     */
+    public function process(ContainerBuilder $container)
+    {
+        (new CommandBusPassCompiler())->process($container);
     }
 }

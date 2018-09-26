@@ -1,0 +1,4 @@
+services:
+    App\Infrastructure\Request\Validator:
+        class: App\Infrastructure\Request\Validator
+        arguments: ['@Symfony\Component\Validator\Validator\ValidatorInterface']

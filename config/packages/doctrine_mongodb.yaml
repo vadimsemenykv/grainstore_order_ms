@@ -13,6 +13,6 @@ doctrine_mongodb:
                 Order:
                     is_bundle: false
                     type: annotation
-                    dir: '%kernel.project_dir%/src/Service/Order/Model'
-                    prefix: Contract\Service\Order\Model\
+                    dir: '%kernel.project_dir%/src/Service/Contract/Model/Order'
+                    prefix: Service\Contract\Model\Order\
                     alias: Order
