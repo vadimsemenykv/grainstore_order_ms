@@ -10,7 +10,10 @@ namespace Service\Contract\Model\Order;
 
 use Service\Contract\Base\AggregateRoot;
 use Service\Contract\Base\ApplyEventTrait;
-use Service\Contract\Model\Order\Event\CreatedOrder;
+use Service\Contract\Model\Order\Event\OrderChangedStatus;
+use Service\Contract\Model\Order\Event\OrderCreated;
+use Service\Contract\Model\Order\Exception\InvalidStatus;
+use Service\Contract\Model\Order\Exception\TryingToModifyNotOwnedOrder;
 use Service\Contract\Model\Order\Id\CategoryCollectionId;
 use Service\Contract\Model\Order\Id\CurrencyCollectionId;
 use Service\Contract\Model\Order\Id\OrderId;
@@ -79,7 +82,7 @@ final class Order extends AggregateRoot
         Quantity $quantity
     ): Order {
         $self = new self();
-        $self->recordThat(CreatedOrder::create(
+        $self->recordThat(OrderCreated::create(
             $orderId,
             $ownerId,
             $categoryCollectionId,
@@ -94,7 +97,7 @@ final class Order extends AggregateRoot
         return $self;
     }
 
-    protected function whenCreatedOrder(CreatedOrder $createdOrder): void
+    protected function whenCreatedOrder(OrderCreated $createdOrder): void
     {
         $this->orderId = $createdOrder->orderId();
         $this->ownerId = $createdOrder->ownerId();
@@ -110,12 +113,24 @@ final class Order extends AggregateRoot
         $this->created = $createdOrder->created();
     }
 
-    public function update()
+    public function changeStatus(Status $status, OwnerId $byUserId): void
     {
+        if ($status->sameValueAs($this->status)) {
+            throw InvalidStatus::reason('order already have same status');
+        }
+        if (!$byUserId->sameValueAs($this->ownerId)) {
+            throw new TryingToModifyNotOwnedOrder();
+        }
 
+        $this->recordThat(OrderChangedStatus::create($this->orderId, $status));
     }
 
-    public function changeStatus()
+    public function whenOrderChangedStatus(OrderChangedStatus $changedStatus): void
+    {
+        $this->status = $changedStatus->status();
+    }
+
+    public function update()
     {
 
     }

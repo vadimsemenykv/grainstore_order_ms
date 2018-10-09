@@ -6,7 +6,7 @@
  * Time: 7:27 PM
  */
 
-namespace App\Controller\Api\Contract\Customer\V1\Order;
+namespace App\Controller\Api\Customer\Contract\V1;
 
 use App\Controller\BaseController;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -31,7 +31,7 @@ class OrderController extends BaseController
      */
     public function create(Request $request, RequestValidator $validator, DocumentManager $documentManager): JsonResponse
     {
-//        $this->get('eventStore\OrderRepository')->get(OrderId::fromString('135TS'));
+        $this->get('eventStore\OrderRepository')->get(OrderId::fromString('135TS'));
         $ownerId = '1AS'; //TODO fetch from ->getUser()->id();
         // Get payload
         $payload = $request->request->all();

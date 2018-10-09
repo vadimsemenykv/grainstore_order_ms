@@ -6,7 +6,7 @@
  * Time: 7:27 PM
  */
 
-namespace App\Controller\Api\Contract\Customer\V1\Order;
+namespace App\Controller\Api\Customer\Contract\V1;
 
 use App\Controller\BaseController;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -19,14 +19,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Infrastructure\Request\Validator as RequestValidator;
 
-class ContractController extends BaseController
+class OfferController extends BaseController
 {
-    public function createByOffer()
+    public function create()
     {
 
     }
 
-    public function createByOrder()
+    public function decline()
     {
 
     }

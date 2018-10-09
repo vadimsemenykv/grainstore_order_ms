@@ -1,4 +1,42 @@
+#Customer Contract Order
 customer::order:create:
     path: /api/contract/v1/order/create
-    controller: App\Controller\Api\Contract\Customer\V1\Order\OrderController::create
+    controller: App\Controller\Api\Customer\Contract\V1\OrderController::create
+    methods:  [POST, OPTIONS]
+
+customer::order:change_status:
+    path: /api/contract/v1/order/change_status
+    controller: App\Controller\Api\Customer\Contract\V1\OrderController::changeStatus
+    methods:  [PATCH, OPTIONS]
+
+customer::order:change:
+    path: /api/contract/v1/order/change
+    controller: App\Controller\Api\Customer\Contract\V1\OrderController::change
+    methods:  [PATCH, OPTIONS]
+
+customer::order:lock:
+    path: /api/contract/v1/order/lock
+    controller: App\Controller\Api\Customer\Contract\V1\OrderController::lock
+    methods:  [PATCH, OPTIONS]
+
+#Customer Contract Offer
+customer::offer:create:
+    path: /api/contract/v1/offer/create
+    controller: App\Controller\Api\Customer\Contract\V1\OfferController::create
+    methods:  [POST, OPTIONS]
+
+customer::offer:decline:
+    path: /api/contract/v1/offer/decline
+    controller: App\Controller\Api\Customer\Contract\V1\OfferController::decline
+    methods:  [PATCH, OPTIONS]
+
+#Customer Contract Contract
+customer::contract:create_by_offer:
+    path: /api/contract/v1/contract/create_by_offer
+    controller: App\Controller\Api\Customer\Contract\V1\ContractController::createByOffer
+    methods:  [POST, OPTIONS]
+
+customer::contract:create_by_order:
+    path: /api/contract/v1/contract/create_by_order
+    controller: App\Controller\Api\Customer\Contract\V1\ContractController::createByOrder
     methods:  [POST, OPTIONS]

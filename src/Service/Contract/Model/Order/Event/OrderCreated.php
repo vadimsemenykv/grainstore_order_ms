@@ -23,7 +23,7 @@ use Service\Contract\Model\Order\TotalPrice;
 use Service\Infrastructure\Messaging\Message\DomainEvent;
 use Assert\AssertionFailedException;
 
-class CreatedOrder extends DomainEvent
+class OrderCreated extends DomainEvent
 {
     /** @var OrderId */
     private $orderId;
@@ -57,7 +57,7 @@ class CreatedOrder extends DomainEvent
         TotalPrice $totalPrice,
         Status $status,
         AvailabilityStatus $availabilityStatus
-    ): CreatedOrder {
+    ): OrderCreated {
         try {
             $event = new self(
                 Order::class,
