@@ -1,4 +1,4 @@
 customer::order:create:
     path: /api/contract/v1/order/create
-    controller: App\Controller\Contract\Customer\V1\Order\OrderController::create
+    controller: App\Controller\Api\Contract\Customer\V1\Order\OrderController::create
     methods:  [POST, OPTIONS]

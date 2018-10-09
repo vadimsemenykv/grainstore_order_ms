@@ -14,11 +14,21 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class BusBridge implements CompilerPassInterface
 {
+    /** @array */
+    protected $names;
+
+    public function __construct(array $names)
+    {
+        $this->names = $names;
+    }
+
     public function process(ContainerBuilder $container)
     {
-        $this->add($container, 'payment_system_command_bus');
-        $this->add($container, 'payment_system_event_bus');
+        foreach ($this->names as $name) {
+            $this->add($container, $name);
+        }
     }
+
     private function add(ContainerBuilder $container, $name)
     {
         // always first check if the primary service is defined

@@ -8,7 +8,7 @@
 
 namespace Service\Contract\Base;
 
-use App\Infrastructure\Messaging\Message\DomainEvent;
+use Service\Infrastructure\Messaging\Message\DomainEvent;
 
 abstract class AggregateRoot
 {
@@ -31,5 +31,6 @@ abstract class AggregateRoot
         $this->apply($event);
         $this->pendingEvents[] = $event;
     }
-    abstract protected function apply(DomainEvent $event): void;
+
+    abstract public function apply(DomainEvent $event): void;
 }

@@ -16,12 +16,6 @@ interface ValueObject
     public function toString(): string;
 
     /**
-     * @param string $objectString
-     * @return ValueObject
-     */
-    public static function fromString(string $objectString): self;
-
-    /**
      * @param ValueObject $object
      * @return bool
      */

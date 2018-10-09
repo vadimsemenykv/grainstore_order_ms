@@ -11,6 +11,8 @@ namespace Service\Contract\Model\Order;
 use Service\Contract\Base\AggregateRoot;
 use Service\Contract\Base\ApplyEventTrait;
 use Service\Contract\Model\Order\Event\CreatedOrder;
+use Service\Contract\Model\Order\Id\CategoryCollectionId;
+use Service\Contract\Model\Order\Id\CurrencyCollectionId;
 use Service\Contract\Model\Order\Id\OrderId;
 use Service\Contract\Model\Order\Id\OwnerId;
 use Doctrine\ODM\MongoDB\Mapping\Annotations\Document;
@@ -31,32 +33,81 @@ final class Order extends AggregateRoot
      */
     private $id;
 
-//    /** @var OrderId */
-//    private $id;
+    /** @var OrderId */
+    private $orderId;
     /** @var OwnerId */
     private $ownerId;
+    /** @var CategoryCollectionId */
+    private $categoryCollectionId;
+    /** @var CurrencyCollectionId */
+    private $currencyCollectionId;
+    /** @var OfferOnly */
+    private $offerOnly;
+    /** @var Price */
+    private $price;
+    /** @var Quantity */
+    private $quantity;
+    /** @var TotalPrice */
+    private $totalPrice;
+    /** @var Status */
+    private $status;
+    /** @var AvailabilityStatus */
+    private $availabilityStatus;
 
-    /** @var \DateTime */
+    /** @var \DateTimeImmutable */
     private $created;
     /** @var \DateTime */
     private $updated;
 
     /**
-     * @param OrderId $id
+     * @param OrderId $orderId
      * @param OwnerId $ownerId
+     * @param CategoryCollectionId $categoryCollectionId
+     * @param CurrencyCollectionId $currencyCollectionId
+     * @param OfferOnly $offerOnly
+     * @param Price $price
+     * @param Quantity $quantity
      * @return Order
      */
-    public static function create(OrderId $id, OwnerId $ownerId): Order
-    {
+    public static function create(
+        OrderId $orderId,
+        OwnerId $ownerId,
+        CategoryCollectionId $categoryCollectionId,
+        CurrencyCollectionId $currencyCollectionId,
+        OfferOnly $offerOnly,
+        Price $price,
+        Quantity $quantity
+    ): Order {
         $self = new self();
-        $self->recordThat(CreatedOrder::create($id, $ownerId));
+        $self->recordThat(CreatedOrder::create(
+            $orderId,
+            $ownerId,
+            $categoryCollectionId,
+            $currencyCollectionId,
+            $offerOnly,
+            $price,
+            $quantity,
+            TotalPrice::from($price->price(), $quantity->quantity(), $offerOnly->isOfferType()),
+            Status::fromString(Status::DEACTIVATED),
+            AvailabilityStatus::fromString(AvailabilityStatus::AVAILABLE)
+        ));
         return $self;
     }
 
     protected function whenCreatedOrder(CreatedOrder $createdOrder): void
     {
-        $this->id = $createdOrder->orderId();
+        $this->orderId = $createdOrder->orderId();
         $this->ownerId = $createdOrder->ownerId();
+        $this->categoryCollectionId = $createdOrder->categoryCollectionId();
+        $this->currencyCollectionId = $createdOrder->currencyCollectionId();
+        $this->price = $createdOrder->price();
+        $this->quantity = $createdOrder->quantity();
+        $this->offerOnly = $createdOrder->offerOnly();
+        $this->totalPrice = $createdOrder->totalPrice();
+        $this->status = $createdOrder->status();
+        $this->availabilityStatus = $createdOrder->availabilityStatus();
+
+        $this->created = $createdOrder->created();
     }
 
     public function update()

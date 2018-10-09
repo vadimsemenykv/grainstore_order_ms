@@ -1,0 +1,24 @@
+services:
+    #Repositories
+    eventStore\OrderRepository:
+        class: Service\Infrastructure\Repository\OrderRepository
+        arguments:
+            - '@contract_service_event_bus'
+            - '@doctrine_mongodb.odm.default_connection'
+            - '%env(MONGODB_DB)%'
+            - 'event_store'
+        public: true
+
+    #GLOBAL
+    messagebus_event_global\EventStore:
+        class: Service\Infrastructure\Listeners\EventStoreWriter
+        arguments: ['@doctrine_mongodb.odm.default_document_manager','%env(MONGODB_DB)%', 'event_store']
+        tags:
+        - { name: contract_service_event_bus.handler, message: . }
+
+    #COMMAND CUSTOMER
+    messagebus_command_order\CreateOrderHandler:
+        class: Service\Contract\Model\Order\Handler\CreateOrderHandler
+        arguments: ['@eventStore\OrderRepository']
+        tags:
+        - { name: contract_service_command_bus.handler, message: Service\Contract\Model\Order\Command\CreateOrder }

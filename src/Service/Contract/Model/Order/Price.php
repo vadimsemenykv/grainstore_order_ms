@@ -6,7 +6,7 @@
  * Time: 8:30 PM
  */
 
-namespace Service\Contract\Model\Order\Id;
+namespace Service\Contract\Model\Order;
 
 use Assert\Assertion;
 use Service\Contract\Contracts\ValueObject;
@@ -15,6 +15,14 @@ use Service\Contract\Model\Order\Exception\InvalidPrice;
 class Price implements ValueObject
 {
     protected $price;
+
+    /**
+     * @return float
+     */
+    public function price(): float
+    {
+        return $this->price;
+    }
 
     /**
      * @return string
@@ -26,9 +34,9 @@ class Price implements ValueObject
 
     /**
      * @param string $price
-     * @return ValueObject
+     * @return Price
      */
-    public static function fromString(string $price): ValueObject
+    public static function fromString(string $price): Price
     {
         return new self((float)$price);
     }
@@ -46,7 +54,6 @@ class Price implements ValueObject
     private function __construct(float $price)
     {
         try {
-            Assertion::notEmpty($price);
             Assertion::float($price);
         } catch (\Exception $e) {
             throw InvalidPrice::reason($e->getMessage());

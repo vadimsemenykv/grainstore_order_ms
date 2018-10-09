@@ -21,9 +21,9 @@ class ObjectId implements ValueObject
         return $this->id;
     }
 
-    public static function fromString(string $id): ValueObject
+    public static function fromString(string $id): ObjectId
     {
-        return new self($id);
+        return new static($id);
     }
 
     public function sameValueAs(ValueObject $object): bool

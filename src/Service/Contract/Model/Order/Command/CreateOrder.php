@@ -12,7 +12,9 @@ use Service\Contract\Model\Order\Id\CategoryCollectionId;
 use Service\Contract\Model\Order\Id\CurrencyCollectionId;
 use Service\Contract\Model\Order\Id\OrderId;
 use Service\Contract\Model\Order\Id\OwnerId;
-use Service\Contract\Model\Order\Id\Price;
+use Service\Contract\Model\Order\OfferOnly;
+use Service\Contract\Model\Order\Price;
+use Service\Contract\Model\Order\Quantity;
 use Service\Infrastructure\Messaging\Message\Command;
 
 class CreateOrder extends Command
@@ -29,14 +31,21 @@ class CreateOrder extends Command
      *
      * @throws \Exception
      */
-    public static function withData(string $orderId, string $ownerId, string $categoryCollectionId, string $currencyCollectionId, bool $offerOnly, float $price, int $quantity)
-    {
+    public static function withData(
+        string $orderId,
+        string $ownerId,
+        string $categoryCollectionId,
+        string $currencyCollectionId,
+        bool $offerOnly,
+        float $price,
+        int $quantity
+    ) {
         $command = new self([
-            'order_id' => $orderId,
-            'owner_id' => $ownerId,
-            'category_collection_id' => $categoryCollectionId,
-            'currency_collection_id' => $currencyCollectionId,
-            'offer_only' => $offerOnly,
+            'orderId' => $orderId,
+            'ownerId' => $ownerId,
+            'categoryCollectionId' => $categoryCollectionId,
+            'currencyCollectionId' => $currencyCollectionId,
+            'offerOnly' => $offerOnly,
             'price' => $price,
             'quantity' => $quantity
         ]);
@@ -47,35 +56,43 @@ class CreateOrder extends Command
     public function orderId(): OrderId
     {
         /** @var OrderId $orderId */
-        $orderId = OrderId::fromString($this->payload()['order_id']);
+        $orderId = OrderId::fromString($this->payload()['orderId']);
         return $orderId;
     }
 
     public function ownerId(): OwnerId
     {
         /** @var OwnerId $ownerId */
-        $ownerId = OwnerId::fromString($this->payload()['owner_id']);
+        $ownerId = OwnerId::fromString($this->payload()['ownerId']);
         return $ownerId;
     }
 
     public function categoryCollectionId(): CategoryCollectionId
     {
         /** @var CategoryCollectionId $categoryCollectionId */
-        $categoryCollectionId = CategoryCollectionId::fromString($this->payload()['category_collection_id']);
+        $categoryCollectionId = CategoryCollectionId::fromString($this->payload()['categoryCollectionId']);
         return $categoryCollectionId;
     }
 
     public function currencyCollectionId(): CurrencyCollectionId
     {
         /** @var CurrencyCollectionId $currencyCollectionId */
-        $currencyCollectionId = CurrencyCollectionId::fromString($this->payload()['currency_collection_id']);
+        $currencyCollectionId = CurrencyCollectionId::fromString($this->payload()['currencyCollectionId']);
         return $currencyCollectionId;
     }
 
     public function price(): Price
     {
-        /** @var CurrencyCollectionId $currencyCollectionId */
-        $currencyCollectionId = CurrencyCollectionId::fromString($this->payload()['price']);
-        return $currencyCollectionId;
+        return Price::fromString($this->payload()['price']);
+    }
+
+    public function quantity(): Quantity
+    {
+        return Quantity::fromString($this->payload()['quantity']);
+    }
+
+    public function offerOnly(): OfferOnly
+    {
+        return OfferOnly::fromString($this->payload()['offerOnly']);
     }
 }

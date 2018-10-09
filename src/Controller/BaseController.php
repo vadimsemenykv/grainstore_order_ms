@@ -10,6 +10,7 @@ use App\Infrastructure\Exception\ErrorCodeHolder;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Psr\Log\LoggerInterface;
 use Service\Contract\Model\Order\Order;
+use Service\Infrastructure\Messaging\Bus\MessageBus;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 abstract class BaseController extends Controller
@@ -18,11 +19,10 @@ abstract class BaseController extends Controller
 
     /** @var LoggerInterface */
     protected $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    /** @var MessageBus */
+    protected $commandBus;
+    /** @var MessageBus */
+    protected $eventBus;
 
     protected function wrapExceptionInHttp(string $httpExceptionClassName, \Exception $exception)
     {

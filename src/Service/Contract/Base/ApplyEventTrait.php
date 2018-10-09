@@ -8,7 +8,7 @@
 
 namespace Service\Contract\Base;
 
-use App\Infrastructure\Messaging\Message\DomainEvent;
+use Service\Infrastructure\Messaging\Message\DomainEvent;
 
 trait ApplyEventTrait
 {
@@ -16,7 +16,7 @@ trait ApplyEventTrait
      * @param DomainEvent $event
      * @throws \RuntimeException
      */
-    protected function apply(DomainEvent $event): void
+    public function apply(DomainEvent $event): void
     {
         $handler = $this->determineEventHandlerMethodFor($event);
         if (! method_exists($this, $handler)) {
@@ -31,6 +31,7 @@ trait ApplyEventTrait
             $this->updated = $event->created();
         }
     }
+
     protected function determineEventHandlerMethodFor(DomainEvent $event): string
     {
         return 'when' . implode(\array_slice(explode('\\', \get_class($event)), -1));
