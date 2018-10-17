@@ -22,3 +22,29 @@ services:
         arguments: ['@eventStore\OrderRepository']
         tags:
         - { name: contract_service_command_bus.handler, message: Service\Contract\Model\Order\Command\CreateOrder }
+
+    messagebus_command_order\ChangeStatusHandler:
+        class: Service\Contract\Model\Order\Handler\ChangeStatusHandler
+        arguments: ['@eventStore\OrderRepository']
+        tags:
+        - { name: contract_service_command_bus.handler, message: Service\Contract\Model\Order\Command\ChangeStatus }
+
+    messagebus_command_order\ChangeAttributesHandler:
+        class: Service\Contract\Model\Order\Handler\ChangeAttributesHandler
+        arguments: ['@eventStore\OrderRepository']
+        tags:
+        - { name: contract_service_command_bus.handler, message: Service\Contract\Model\Order\Command\ChangeAttributes }
+
+    messagebus_command_order\LockOrderHandler:
+        class: Service\Contract\Model\Order\Handler\LockOrderHandler
+        arguments: ['@eventStore\OrderRepository']
+        tags:
+        - { name: contract_service_command_bus.handler, message: Service\Contract\Model\Order\Command\LockOrder }
+
+    messagebus_command_order\UnLockOrderHandler:
+        class: Service\Contract\Model\Order\Handler\UnLockOrderHandler
+        arguments: ['@eventStore\OrderRepository']
+        tags:
+        - { name: contract_service_command_bus.handler, message: Service\Contract\Model\Order\Command\UnLockOrder }
+
+    #PROCESS MANAGERS FOR DEACTIVATING LINKED ORDERS AND LINKED OFFERS and etc.

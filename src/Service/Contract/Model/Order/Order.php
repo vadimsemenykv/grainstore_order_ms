@@ -10,14 +10,22 @@ namespace Service\Contract\Model\Order;
 
 use Service\Contract\Base\AggregateRoot;
 use Service\Contract\Base\ApplyEventTrait;
+use Service\Contract\Model\Order\Event\OrderChangedOfferOnly;
+use Service\Contract\Model\Order\Event\OrderChangedPrice;
+use Service\Contract\Model\Order\Event\OrderChangedQuantity;
 use Service\Contract\Model\Order\Event\OrderChangedStatus;
 use Service\Contract\Model\Order\Event\OrderCreated;
+use Service\Contract\Model\Order\Event\OrderLocked;
+use Service\Contract\Model\Order\Event\OrderUnLocked;
+use Service\Contract\Model\Order\Exception\FailedToGetLock;
+use Service\Contract\Model\Order\Exception\InvalidOfferOnly;
+use Service\Contract\Model\Order\Exception\InvalidPrice;
 use Service\Contract\Model\Order\Exception\InvalidStatus;
 use Service\Contract\Model\Order\Exception\TryingToModifyNotOwnedOrder;
 use Service\Contract\Model\Order\Id\CategoryCollectionId;
 use Service\Contract\Model\Order\Id\CurrencyCollectionId;
 use Service\Contract\Model\Order\Id\OrderId;
-use Service\Contract\Model\Order\Id\OwnerId;
+use Service\Contract\Model\Order\Id\UserId;
 use Doctrine\ODM\MongoDB\Mapping\Annotations\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
 
@@ -38,7 +46,7 @@ final class Order extends AggregateRoot
 
     /** @var OrderId */
     private $orderId;
-    /** @var OwnerId */
+    /** @var UserId */
     private $ownerId;
     /** @var CategoryCollectionId */
     private $categoryCollectionId;
@@ -54,8 +62,8 @@ final class Order extends AggregateRoot
     private $totalPrice;
     /** @var Status */
     private $status;
-    /** @var AvailabilityStatus */
-    private $availabilityStatus;
+    /** @var UserId */
+    private $lockedBy;
 
     /** @var \DateTimeImmutable */
     private $created;
@@ -64,7 +72,7 @@ final class Order extends AggregateRoot
 
     /**
      * @param OrderId $orderId
-     * @param OwnerId $ownerId
+     * @param UserId $ownerId
      * @param CategoryCollectionId $categoryCollectionId
      * @param CurrencyCollectionId $currencyCollectionId
      * @param OfferOnly $offerOnly
@@ -74,7 +82,7 @@ final class Order extends AggregateRoot
      */
     public static function create(
         OrderId $orderId,
-        OwnerId $ownerId,
+        UserId $ownerId,
         CategoryCollectionId $categoryCollectionId,
         CurrencyCollectionId $currencyCollectionId,
         OfferOnly $offerOnly,
@@ -91,13 +99,12 @@ final class Order extends AggregateRoot
             $price,
             $quantity,
             TotalPrice::from($price->price(), $quantity->quantity(), $offerOnly->isOfferType()),
-            Status::fromString(Status::DEACTIVATED),
-            AvailabilityStatus::fromString(AvailabilityStatus::AVAILABLE)
+            Status::fromString(Status::DEACTIVATED)
         ));
         return $self;
     }
 
-    protected function whenCreatedOrder(OrderCreated $createdOrder): void
+    protected function whenOrderCreated(OrderCreated $createdOrder): void
     {
         $this->orderId = $createdOrder->orderId();
         $this->ownerId = $createdOrder->ownerId();
@@ -108,41 +115,91 @@ final class Order extends AggregateRoot
         $this->offerOnly = $createdOrder->offerOnly();
         $this->totalPrice = $createdOrder->totalPrice();
         $this->status = $createdOrder->status();
-        $this->availabilityStatus = $createdOrder->availabilityStatus();
 
         $this->created = $createdOrder->created();
     }
 
-    public function changeStatus(Status $status, OwnerId $byUserId): void
+    public function changeStatus(Status $status, UserId $byUserId): void
     {
+        $this->validateOwner($byUserId);
         if ($status->sameValueAs($this->status)) {
             throw InvalidStatus::reason('order already have same status');
-        }
-        if (!$byUserId->sameValueAs($this->ownerId)) {
-            throw new TryingToModifyNotOwnedOrder();
         }
 
         $this->recordThat(OrderChangedStatus::create($this->orderId, $status));
     }
 
-    public function whenOrderChangedStatus(OrderChangedStatus $changedStatus): void
+    protected function whenOrderChangedStatus(OrderChangedStatus $changedStatus): void
     {
         $this->status = $changedStatus->status();
     }
 
-    public function update()
+    public function changePrice(Price $price, UserId $byUserId): void
     {
-
+        $this->validateOwner($byUserId);
+        if (!$price->isGreaterThanZero() && !$this->offerOnly->isOfferType()) {
+            throw InvalidPrice::reason('price should be greater than 0');
+        }
+        $this->recordThat(OrderChangedPrice::create($this->orderId, $price));
     }
 
-    public function reserve()
+    protected function whenOrderChangedPrice(OrderChangedPrice $changedPrice): void
     {
-
+        $this->price = $changedPrice->price();
     }
 
-    public function releaseReservation()
+    public function changeOfferOnly(OfferOnly $offerOnly, UserId $byUserId): void
     {
+        $this->validateOwner($byUserId);
+        if (!$this->price->isGreaterThanZero() && !$offerOnly->isOfferType()) {
+            throw InvalidOfferOnly::reason('price should be greater than 0');
+        }
+        $this->recordThat(OrderChangedOfferOnly::create($this->orderId, $offerOnly));
+    }
 
+    protected function whenOrderChangedOfferOnly(OrderChangedOfferOnly $changedOfferOnly): void
+    {
+        $this->offerOnly = $changedOfferOnly->offerOnly();
+    }
+
+    public function changeQuantity(Quantity $quantity, UserId $byUserId): void
+    {
+        $this->validateOwner($byUserId);
+        $this->recordThat(OrderChangedQuantity::create($this->orderId, $quantity));
+    }
+
+    protected function whenOrderChangedQuantity(OrderChangedQuantity $changedQuantity): void
+    {
+        $this->quantity = $changedQuantity->quantity();
+    }
+
+    public function lock(UserId $byUserId): void
+    {
+        if ($this->lockedBy && !$this->lockedBy->sameValueAs($byUserId)) {
+            throw FailedToGetLock::reason();
+        }
+        $this->recordThat(OrderLocked::create($this->orderId, $byUserId));
+    }
+
+    protected function whenOrderLocked(OrderLocked $orderLocked): void
+    {
+        $this->lockedBy = $orderLocked->lockedBy();
+    }
+
+    public function unLock(): void
+    {
+        if (!$this->lockedBy) {
+            throw FailedToGetLock::reason('Failed to free lock: lock is empty');
+        }
+        if ($this->status->inContract()) {
+            throw FailedToGetLock::reason('Failed to free lock: order is in contract');
+        }
+        $this->recordThat(OrderUnLocked::create($this->orderId));
+    }
+
+    protected function whenOrderUnLocked(OrderUnLocked $orderUnLocked): void
+    {
+        $this->lockedBy = null;
     }
 
     public function createOffer()
@@ -178,5 +235,15 @@ final class Order extends AggregateRoot
     public function addOfferToGroup()
     {
 
+    }
+
+    /**
+     * @param UserId $byUserId
+     */
+    private function validateOwner(UserId $byUserId): void
+    {
+        if (!$byUserId->sameValueAs($this->ownerId)) {
+            throw new TryingToModifyNotOwnedOrder();
+        }
     }
 }

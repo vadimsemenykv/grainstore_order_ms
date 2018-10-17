@@ -10,28 +10,24 @@ namespace Service\Contract\Model\Order\Command;
 
 use Service\Contract\Model\Order\Id\OrderId;
 use Service\Contract\Model\Order\Id\UserId;
-use Service\Contract\Model\Order\Status;
 use Service\Infrastructure\Messaging\Message\Command;
 
-class ChangeStatus extends Command
+class LockOrder extends Command
 {
     /**
      * @param string $orderId
-     * @param string $ownerId
-     * @param string $status
-     * @return ChangeStatus
+     * @param string $lockBy
+     * @return LockOrder
      *
      * @throws \Exception
      */
     public static function make(
         string $orderId,
-        string $ownerId,
-        string $status
-    ): ChangeStatus {
+        string $lockBy
+    ): LockOrder {
         $command = new self([
             'orderId' => $orderId,
-            'ownerId' => $ownerId,
-            'status' => $status
+            'lockBy' => $lockBy
         ]);
 
         return $command;
@@ -44,17 +40,10 @@ class ChangeStatus extends Command
         return $orderId;
     }
 
-    public function ownerId(): UserId
+    public function lockBy(): UserId
     {
         /** @var UserId $ownerId */
-        $ownerId = UserId::fromString($this->payload()['ownerId']);
+        $ownerId = UserId::fromString($this->payload()['lockBy']);
         return $ownerId;
-    }
-
-    public function status(): Status
-    {
-        /** @var Status $categoryCollectionId */
-        $status = Status::fromString($this->payload()['status']);
-        return $status;
     }
 }

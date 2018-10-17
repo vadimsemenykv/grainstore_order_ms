@@ -5,7 +5,7 @@ customer::order:create:
     methods:  [POST, OPTIONS]
 
 customer::order:change_status:
-    path: /api/contract/v1/order/change_status
+    path: /api/contract/v1/order/change-status
     controller: App\Controller\Api\Customer\Contract\V1\OrderController::changeStatus
     methods:  [PATCH, OPTIONS]
 
@@ -32,11 +32,11 @@ customer::offer:decline:
 
 #Customer Contract Contract
 customer::contract:create_by_offer:
-    path: /api/contract/v1/contract/create_by_offer
+    path: /api/contract/v1/contract/create-by-offer
     controller: App\Controller\Api\Customer\Contract\V1\ContractController::createByOffer
     methods:  [POST, OPTIONS]
 
 customer::contract:create_by_order:
-    path: /api/contract/v1/contract/create_by_order
+    path: /api/contract/v1/contract/create-by-order
     controller: App\Controller\Api\Customer\Contract\V1\ContractController::createByOrder
     methods:  [POST, OPTIONS]

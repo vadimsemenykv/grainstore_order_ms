@@ -3,9 +3,8 @@
 namespace Service\Contract\Model\Order\Handler;
 
 use Service\Contract\Base\CommandHandler;
-use Service\Contract\Model\Order\Command\CreateOrder;
+use Service\Contract\Model\Order\Command\UnLockOrder;
 use Service\Contract\Model\Order\IOrderRepository;
-use Service\Contract\Model\Order\Order;
 use Service\Infrastructure\Messaging\Message\Base\Message;
 
 /**
@@ -15,13 +14,13 @@ use Service\Infrastructure\Messaging\Message\Base\Message;
  * Time: 3:27 PM
  */
 
-class CreateOrderHandler extends CommandHandler
+class UnLockOrderHandler extends CommandHandler
 {
     /** @var IOrderRepository */
     private $orderRepository;
 
     /**
-     * CreateOrderHandler constructor.
+     * LockOrderHandler constructor.
      * @param IOrderRepository $orderRepository
      */
     public function __construct(IOrderRepository $orderRepository)
@@ -30,20 +29,12 @@ class CreateOrderHandler extends CommandHandler
     }
 
     /**
-     * @param CreateOrder|Message $message
+     * @param UnLockOrder|Message $message
      */
     public function invoke(Message $message)
     {
-        $order = Order::create(
-            $message->orderId(),
-            $message->ownerId(),
-            $message->categoryCollectionId(),
-            $message->currencyCollectionId(),
-            $message->offerOnly(),
-            $message->price(),
-            $message->quantity()
-        );
-
+        $order = $this->orderRepository->get($message->orderId());
+        $order->unLock();
         $this->orderRepository->save($order);
     }
 }

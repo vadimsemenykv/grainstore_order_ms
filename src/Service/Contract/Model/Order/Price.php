@@ -24,6 +24,11 @@ class Price implements ValueObject
         return $this->price;
     }
 
+    public function isGreaterThanZero(): bool
+    {
+        return $this->price > 0;
+    }
+
     /**
      * @return string
      */

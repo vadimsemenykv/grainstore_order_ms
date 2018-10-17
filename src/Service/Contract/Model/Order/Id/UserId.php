@@ -10,4 +10,4 @@ namespace Service\Contract\Model\Order\Id;
 
 use Service\Contract\Base\ObjectId;
 
-class OwnerId extends ObjectId{}
+class UserId extends ObjectId{}

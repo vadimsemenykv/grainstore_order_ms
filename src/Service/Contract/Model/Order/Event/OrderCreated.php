@@ -9,13 +9,12 @@
 namespace Service\Contract\Model\Order\Event;
 
 use App\Infrastructure\Exception\CriticalError;
-use Service\Contract\Model\Order\AvailabilityStatus;
 use Service\Contract\Model\Order\Order;
 use Service\Contract\Model\Order\OfferOnly;
 use Service\Contract\Model\Order\Price;
 use Service\Contract\Model\Order\Quantity;
 use Service\Contract\Model\Order\Id\OrderId;
-use Service\Contract\Model\Order\Id\OwnerId;
+use Service\Contract\Model\Order\Id\UserId;
 use Service\Contract\Model\Order\Id\CategoryCollectionId;
 use Service\Contract\Model\Order\Id\CurrencyCollectionId;
 use Service\Contract\Model\Order\Status;
@@ -27,7 +26,7 @@ class OrderCreated extends DomainEvent
 {
     /** @var OrderId */
     private $orderId;
-    /** @var OwnerId */
+    /** @var UserId */
     private $ownerId;
     /** @var CategoryCollectionId */
     private $categoryCollectionId;
@@ -43,20 +42,17 @@ class OrderCreated extends DomainEvent
     private $totalPrice;
     /** @var Status */
     private $status;
-    /** @var AvailabilityStatus */
-    private $availabilityStatus;
 
     public static function create(
         OrderId $orderId,
-        OwnerId $ownerId,
+        UserId $ownerId,
         CategoryCollectionId $categoryCollectionId,
         CurrencyCollectionId $currencyCollectionId,
         OfferOnly $offerOnly,
         Price $price,
         Quantity $quantity,
         TotalPrice $totalPrice,
-        Status $status,
-        AvailabilityStatus $availabilityStatus
+        Status $status
     ): OrderCreated {
         try {
             $event = new self(
@@ -71,8 +67,7 @@ class OrderCreated extends DomainEvent
                     'quantity' => $quantity->toString(),
                     'offerOnly' => $offerOnly->toString(),
                     'totalPrice' => $totalPrice->toString(),
-                    'status' => $status->toString(),
-                    'availabilityStatus' => $availabilityStatus->toString()
+                    'status' => $status->toString()
                 ]
             );
             $event->orderId = $orderId;
@@ -84,7 +79,6 @@ class OrderCreated extends DomainEvent
             $event->offerOnly = $offerOnly;
             $event->totalPrice = $totalPrice;
             $event->status = $status;
-            $event->availabilityStatus = $availabilityStatus;
             return $event;
         } catch (AssertionFailedException $exception) {
             throw CriticalError::wrap($exception);
@@ -104,12 +98,12 @@ class OrderCreated extends DomainEvent
     }
 
     /**
-     * @return OwnerId
+     * @return UserId
      */
-    public function ownerId(): OwnerId
+    public function ownerId(): UserId
     {
         if (null === $this->ownerId) {
-            $this->ownerId = OwnerId::fromString($this->payload()['ownerId']);
+            $this->ownerId = UserId::fromString($this->payload()['ownerId']);
         }
 
         return $this->ownerId;
@@ -201,17 +195,5 @@ class OrderCreated extends DomainEvent
         }
 
         return $this->status;
-    }
-
-    /**
-     * @return AvailabilityStatus
-     */
-    public function availabilityStatus(): AvailabilityStatus
-    {
-        if (null === $this->availabilityStatus) {
-            $this->availabilityStatus = AvailabilityStatus::fromString($this->payload()['availabilityStatus']);
-        }
-
-        return $this->availabilityStatus;
     }
 }

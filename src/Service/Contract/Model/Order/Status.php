@@ -16,15 +16,21 @@ class Status implements ValueObject
 {
     public const ACTIVE = 'active';
     public const DEACTIVATED = 'deactivated';
+    public const IN_CONTRACT = 'in_contract';
 
     protected $status;
 
     /**
-     * @return float
+     * @return string
      */
-    public function price(): float
+    public function status(): string
     {
         return $this->status;
+    }
+
+    public function inContract(): bool
+    {
+        return $this->status === self::IN_CONTRACT;
     }
 
     /**

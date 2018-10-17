@@ -8,43 +8,36 @@
 
 namespace Service\Contract\Model\Order\Command;
 
-use Service\Contract\Model\Order\Id\CategoryCollectionId;
-use Service\Contract\Model\Order\Id\CurrencyCollectionId;
 use Service\Contract\Model\Order\Id\OrderId;
 use Service\Contract\Model\Order\Id\UserId;
 use Service\Contract\Model\Order\OfferOnly;
 use Service\Contract\Model\Order\Price;
 use Service\Contract\Model\Order\Quantity;
+use Service\Contract\Model\Order\Status;
 use Service\Infrastructure\Messaging\Message\Command;
 
-class CreateOrder extends Command
+class ChangeAttributes extends Command
 {
     /**
      * @param string $orderId
      * @param string $ownerId
-     * @param string $categoryCollectionId
-     * @param string $currencyCollectionId
      * @param bool $offerOnly
      * @param float $price
      * @param int $quantity
-     * @return CreateOrder
+     * @return ChangeAttributes
      *
      * @throws \Exception
      */
-    public static function withData(
+    public static function make(
         string $orderId,
         string $ownerId,
-        string $categoryCollectionId,
-        string $currencyCollectionId,
         bool $offerOnly,
         float $price,
         int $quantity
-    ): CreateOrder {
+    ): ChangeAttributes {
         $command = new self([
             'orderId' => $orderId,
             'ownerId' => $ownerId,
-            'categoryCollectionId' => $categoryCollectionId,
-            'currencyCollectionId' => $currencyCollectionId,
             'offerOnly' => $offerOnly,
             'price' => $price,
             'quantity' => $quantity
@@ -65,20 +58,6 @@ class CreateOrder extends Command
         /** @var UserId $ownerId */
         $ownerId = UserId::fromString($this->payload()['ownerId']);
         return $ownerId;
-    }
-
-    public function categoryCollectionId(): CategoryCollectionId
-    {
-        /** @var CategoryCollectionId $categoryCollectionId */
-        $categoryCollectionId = CategoryCollectionId::fromString($this->payload()['categoryCollectionId']);
-        return $categoryCollectionId;
-    }
-
-    public function currencyCollectionId(): CurrencyCollectionId
-    {
-        /** @var CurrencyCollectionId $currencyCollectionId */
-        $currencyCollectionId = CurrencyCollectionId::fromString($this->payload()['currencyCollectionId']);
-        return $currencyCollectionId;
     }
 
     public function price(): Price
