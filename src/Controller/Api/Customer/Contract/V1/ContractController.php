@@ -23,6 +23,9 @@ class ContractController extends BaseController
 {
     public function createByOffer()
     {
+        //lock order
+        //lock linked orders
+        //lock offers linked from category
 
     }
 

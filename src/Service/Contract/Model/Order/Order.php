@@ -24,6 +24,7 @@ use Service\Contract\Model\Order\Exception\InvalidStatus;
 use Service\Contract\Model\Order\Exception\TryingToModifyNotOwnedOrder;
 use Service\Contract\Model\Order\Id\CategoryCollectionId;
 use Service\Contract\Model\Order\Id\CurrencyCollectionId;
+use Service\Contract\Model\Order\Id\OfferId;
 use Service\Contract\Model\Order\Id\OrderId;
 use Service\Contract\Model\Order\Id\UserId;
 use Doctrine\ODM\MongoDB\Mapping\Annotations\Document;
@@ -202,8 +203,23 @@ final class Order extends AggregateRoot
         $this->lockedBy = null;
     }
 
-    public function createOffer()
-    {
+    public function createOffer(
+        OfferId $offerId,
+        OrderId $orderId,
+        UserId $fromUserId,
+        UserId $toUserId,
+        UserId $orderOwnerId,
+        Price $price,
+        array $linkedOrders,
+        ?CategoryCollectionId $linkedCategoryId = null,
+        ?OfferId $basedOnOfferId = null
+    ) {
+//        $orderId
+//        $fromUserId
+//        $toUserId
+//        $orderOwnerId
+//        $basedOnOfferId
+//                $price
 
     }
 
@@ -228,11 +244,6 @@ final class Order extends AggregateRoot
     }
 
     public function createOfferGroup()
-    {
-
-    }
-
-    public function addOfferToGroup()
     {
 
     }
